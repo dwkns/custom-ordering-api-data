@@ -1,0 +1,18 @@
+#system files
+.DS_Store
+
+# 11ty folders
+_site
+dist
+
+# package managers
+node_modules
+yarn.lock
+yarn-error.log
+package-lock.json
+
+# enviroment variables
+.env
+
+# Netlify build folder
+.netlify
