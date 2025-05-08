@@ -104,7 +104,7 @@
           const li = document.createElement("li")
           li.className =
             "border-2  mt-0.5 border-amber-300 p-0.5 pl-2 hover:cursor-grab"
-          li.innerText = `${story.name}`
+          li.innerText = `${story.name} ${story.order ? "" : " — (order not saved)"}`
           li.setAttribute("data-name", story.name)
           li.setAttribute("data-order", story.order)
           items.appendChild(li)
