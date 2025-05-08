@@ -5,8 +5,11 @@
   "license": "MIT",
   "dependencies": {
     "@11ty/eleventy": "^3.0.0",
-    "eleventy-plugin-tailwindcss-4": "^2.0.0",
-    "rimraf": "^6.0.1"
+    "dotenv": "^16.5.0",
+    "eleventy-plugin-console-plus": "^0.1.1",
+    "eleventy-plugin-tailwindcss-4": "^2.0.1",
+    "rimraf": "^6.0.1",
+    "touch": "^3.1.1"
   },
   "type": "module",
   "scripts": {

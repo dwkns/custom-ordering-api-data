@@ -1,14 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="generator" content="{{ eleventy.generator }}">
-  <link rel="stylesheet" href="/styles.css">
-  <title>Just a title</title>
-</head>
-<body>
-  <p class="text-3xl text-pink-600" >Just some styled content here</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="{{ eleventy.generator }}" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Just a title</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  </head>
+  <body>
+    <div class="container mx-auto mt-16">
+      <p class="text-3xl">Original order of Stories from API</p>
+      <ul class="list-none mt-8">
+        {% for story in stories.apiStoriesArray %}
+        <li>{{story}}</li>
+          
+        {% endfor %}
+      </ul>
+
+
+      <p class="text-3xl mt-8 ">Drag and drop the stories to order</p>
+
+      {# <ul> to hold the sortable list of stories #}
+      <ul id="items" class="list-none mt-8">
+       
+      </ul>
+
+      {# Button to save the order of the stories #}
+      <div class="mt-8">
+        <form class="" id="refresh-button" method="get">
+          <button class="p-2 bg-yellow-400 rounded" onclick="sendJSON()" type="button">Save order</button>
+        </form>
+      </div>
+    </div>
+
+    {# {% if site.currentEnv == "development" %} #}
+    <script>
+
+      // Some globals we'll need.
+      const items = document.getElementById("items")
+      let storedJSON
+      let storiesArray
+
+      // read JSON from a url
+      async function getJSON(url) {
+        let responce = await fetch(url) // read file
+        let jsonResponce = await responce.json() // extract json
+        return jsonResponce
+      }
+
+      function reconstructArrayFromUnorderedList() {
+        // loop through the <li> items of the <ul> with id="items" and create an array of objects.
+        const itemsArray = []
+        const listItems = items.querySelectorAll("li")
+        listItems.forEach((item, index) => {
+          const name = item.getAttribute("data-name")
+          const order = index + 1
+          itemsArray.push({ name, order })
+        })
+        return itemsArray
+      }
+
+      async function sendJSON(url = "/reload/") {
+        // loop through the <li> items of the <ul> with id="items" and create an array of objects
+        const newArrayofStories = reconstructArrayFromUnorderedList() 
+        // Ensure it's back in the right format
+        const newJSON = {
+          storiesArray: newArrayofStories,
+        }
+        const jsonString = JSON.stringify(newJSON) // stringify our JSON
+        
+        // create url including base64 encoded JSON
+        // Needs to be base64 encoded because as it's a GET request.
+        const urlWithParams = url + btoa(jsonString) 
+        let response = await fetch(urlWithParams) // call the development server URL
+        console.log(`Sent: ${urlWithParams} — Recieved ${response.status}`)
+      }
+
+      // Sort the array by the value of the order key.
+      function sortByOrder(array) {
+        return array.sort((a, b) => {
+          if (a.order === null && b.order === null) return 0
+          if (a.order === null) return -1
+          if (b.order === null) return 1
+          return a.order - b.order
+        })
+      }
+
+
+      // read the JSON and set the global to the files contents.
+      getJSON("/sorted-stories.json").then((result) => {
+
+        storiesArray = result.storiesArray
+       
+        sortByOrder(storiesArray) // sort the array by the order key.
+
+
+        // loop through the array and create a <li> item for each story.
+        // Replace the contents of the <ul> with id="items " with the new <li> items.
+        items.innerHTML = ""
+        storiesArray.forEach((story) => {
+          const li = document.createElement("li")
+          li.className =
+            "border-2  mt-0.5 border-amber-300 p-0.5 pl-2 hover:cursor-grab"
+          li.innerText = `${story.name}`
+          li.setAttribute("data-name", story.name)
+          li.setAttribute("data-order", story.order)
+          items.appendChild(li)
+        })
+      })
+
+      // SortableJS make the list sortable
+      var el = document.getElementById("items")
+      var sortable = Sortable.create(el)
+    </script>
+
+    {# {% endif %} #}
+  </body>
 </html>
