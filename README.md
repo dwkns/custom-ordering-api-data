@@ -1,6 +1,4 @@
-# Minimal repo with 11ty and Tailwind 4
-Pretty much the smallest Eleventy and Tailwind 4 repo. 
+# Custom ordering of data from API a mini CMS in Eleventy
 
-Useful for tracking down bugs
+This is an insane idea and you probably shouldn't use it but inspired by [this question](https://discord.com/channels/741017160297611315/1365971560036569138/1365971560036569138) this is a mini CMS built in Eleventy.
 
-`yarn && yarn dev` to install and run.
