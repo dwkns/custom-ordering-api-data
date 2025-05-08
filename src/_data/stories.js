@@ -2,7 +2,7 @@ import * as fs from 'fs'
 
 // Simulate getting unordered stories from an API
 const apiStoriesArray = [
-  "Story 1", "Story 2", "Story 3","Story 5"
+  "Story 1", "Story 2", "Story 3","Story 4"
 ]
 
 // Where we store our sorting order
